@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "gdb",
+      "request": "attach",
+      "name": "Attach to gdbserver",
+      "executable": "tests/bin/unit_tests",
+      "target": "10.211.55.2:2345",
+      "remote": true,
+      "cwd": "${workspaceRoot}",
+      "gdbpath": "gdb",
+      "autorun": [""]
+    },
+    {
+      "type": "gdb",
+      "request": "attach",
+      "name": "BlastEm (GDB)",
+      "executable": "bin/out.elf",
+      "target": "127.0.0.1:1234",
+      "remote": true,
+      "cwd": "${workspaceRoot}",
+      "gdbpath": "gdb"
+    }
+  ]
+}

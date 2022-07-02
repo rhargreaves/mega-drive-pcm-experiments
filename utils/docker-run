@@ -1,0 +1,21 @@
+#!/bin/bash
+set -euo pipefail
+
+IMAGE_NAME=mega-drive-pcm
+docker build -t $IMAGE_NAME .
+if [ -t 1 ] ; then
+    TTY_PARAM=-t
+else
+    TTY_PARAM=
+fi
+docker run \
+    --cap-add=SYS_PTRACE \
+    --privileged \
+    -p 2345:2345 \
+    -e BUILD \
+    --rm \
+    -v $(pwd)/out:/app/out \
+    -i \
+    $TTY_PARAM \
+    $IMAGE_NAME \
+    "$@"

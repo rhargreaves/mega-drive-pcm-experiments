@@ -1,0 +1,42 @@
+name: Build & Release
+on:
+  push:
+    branches: "*"
+  create:
+    tags:
+      - v*
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: |
+          mkdir out
+          ./docker-make all
+          rm -f out/rom_head.o out/rom_head.bin out/rom.out
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(cat ./out/version.txt)
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload ROM
+        id: upload_rom
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./out/rom.bin
+          asset_name: mega-drive-pcm-${{ steps.get_version.outputs.VERSION }}.bin
+          asset_content_type: application/octet-stream

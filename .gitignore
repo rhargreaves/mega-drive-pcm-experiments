@@ -1,0 +1,12 @@
+bin/
+*.bin
+*.o
+*.code-workspace
+tests/cmocka/
+tests/bin/
+out/
+.idea/
+.vscode/ipch/
+.vscode/*.log
+*.swp
+res/*.s
